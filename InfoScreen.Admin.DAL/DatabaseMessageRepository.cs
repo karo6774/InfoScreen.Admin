@@ -13,7 +13,7 @@ namespace InfoScreen.Admin.Logic
         private const string NewestMessageQuery = "SELECT TOP 1 * from Messages ORDER BY Date DESC";
 
         private const string CreateMessageQuery =
-            "INSERT into Messages (AdminId, Date, Text, Header) VALUES (@AdminId, @Date, @Text, @Header) OUTPUT ";
+            "INSERT into Messages (AdminId, Date, Text, Header) VALUES (@AdminId, @Date, @Text, @Header)";
 
         private static Message ParseMessage(DataRow row)
         {
