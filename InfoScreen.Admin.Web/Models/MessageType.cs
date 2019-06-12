@@ -1,4 +1,3 @@
-using GraphQL.Instrumentation;
 using GraphQL.Types;
 using InfoScreen.Admin.Logic;
 
