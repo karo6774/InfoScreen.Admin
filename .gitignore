@@ -1,0 +1,4 @@
+.idea
+*.DotSettings.user
+InfoScreen.Admin.*/bin
+InfoScreen.Admin.*/obj
