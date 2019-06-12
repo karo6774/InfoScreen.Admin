@@ -32,9 +32,11 @@ namespace InfoScreen.Admin.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
+            services.AddSingleton<LoginService>();
+            
             services.AddTransient<IAdminRepository, DatabaseAdminRepository>();
             services.AddTransient<IMessageRepository, DatabaseMessageRepository>();
             

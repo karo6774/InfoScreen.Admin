@@ -22,8 +22,7 @@ namespace InfoScreen.Admin.Web.Models
                 {
                     var message = ctx.GetArgument<Message>("message");
                     message.Date = DateTime.Now;
-                    // TODO: Get Admin ID from currently signed in User
-                    message.CreatedBy = 1;
+                    message.CreatedBy = ctx.UserContext.As<InfoScreenUserContext>().AdminId;
                     return await messages.CreateMessage(message);
                 }
             );

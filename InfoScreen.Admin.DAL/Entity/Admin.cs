@@ -28,5 +28,10 @@ namespace InfoScreen.Admin.DAL.Entity
             PasswordSalt = salt;
             PasswordHash = hash;
         }
+
+        public bool MatchesPassword(string password)
+        {
+            return Hash.VerifyPassword(password, PasswordHash, PasswordSalt);
+        }
     }
 }
