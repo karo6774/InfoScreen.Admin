@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using GraphQL;
 using GraphQL.Types;
 using InfoScreen.Admin.Logic;
 
@@ -6,10 +8,11 @@ namespace InfoScreen.Admin.Web.Models
 {
     public class InfoScreenMutation : ObjectGraphType
     {
-        public InfoScreenMutation(IMessageRepository messages)
+        public InfoScreenMutation(IMessageRepository messages,
+            IAdminRepository admins)
         {
             Name = "Mutation";
-            
+
             FieldAsync<BooleanGraphType>(
                 "createMessage",
                 arguments: new QueryArguments(
@@ -22,6 +25,24 @@ namespace InfoScreen.Admin.Web.Models
                     // TODO: Get Admin ID from currently signed in User
                     message.CreatedBy = 1;
                     return await messages.CreateMessage(message);
+                }
+            );
+
+            FieldAsync<BooleanGraphType>(
+                "createAdmin",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<AdminInputType>> {Name = "admin"}
+                ),
+                resolve: async ctx =>
+                {
+                    var input = ctx.GetArgument<Dictionary<string, object>>("admin");
+                    var admin = new DAL.Entity.Admin
+                    {
+                        Username = (string) input["username"]
+                    };
+                    admin.SetPassword((string) input["password"]);
+
+                    return await admins.CreateAdmin(admin);
                 }
             );
         }

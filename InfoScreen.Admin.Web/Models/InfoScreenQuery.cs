@@ -6,7 +6,8 @@ namespace InfoScreen.Admin.Web.Models
 {
     public class InfoScreenQuery : ObjectGraphType<object>
     {
-        public InfoScreenQuery(IMessageRepository messages)
+        public InfoScreenQuery(IMessageRepository messages,
+            IAdminRepository admins)
         {
             Name = "Query";
 
@@ -31,6 +32,22 @@ namespace InfoScreen.Admin.Web.Models
             FieldAsync<MessageType>(
                 "newestMessage",
                 resolve: async ctx => await messages.GetNewestMessage()
+            );
+
+            FieldAsync<AdminType>(
+                "admin",
+                arguments: new QueryArguments(
+                    new QueryArgument<IntGraphType> {Name = "id"},
+                    new QueryArgument<StringGraphType> {Name = "username"}
+                ),
+                resolve: async ctx =>
+                {
+                    if (ctx.HasArgument("id"))
+                        return await admins.GetAdmin(ctx.GetArgument<int>("id"));
+                    if (ctx.HasArgument("username"))
+                        return await admins.FindByUsername(ctx.GetArgument<string>("username"));
+                    return null;
+                }
             );
         }
     }

@@ -34,13 +34,20 @@ namespace InfoScreen.Admin.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+
+            services.AddTransient<IAdminRepository, DatabaseAdminRepository>();
             services.AddTransient<IMessageRepository, DatabaseMessageRepository>();
+            
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
             services.AddSingleton<InfoScreenQuery>();
             services.AddSingleton<InfoScreenMutation>();
+
+            services.AddSingleton<AdminType>();
+            services.AddSingleton<AdminInputType>();
             services.AddSingleton<MessageType>();
             services.AddSingleton<MessageInputType>();
+
             services.AddSingleton<ISchema, InfoScreenSchema>();
         }
 
