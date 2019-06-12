@@ -8,7 +8,7 @@ namespace InfoScreen.Admin.Web.Models
     {
         public InfoScreenMutation(IMessageRepository messages)
         {
-            Name = "Query";
+            Name = "Mutation";
             
             FieldAsync<BooleanGraphType>(
                 "createMessage",
