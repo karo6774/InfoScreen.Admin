@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace InfoScreen.Admin.Logic
     public class DatabaseAdminRepository : IAdminRepository
     {
         private const string GetAdminQuery = "SELECT * from Admins WHERE Id=@Id";
-        private const string FindAdminQuery = "SELECT TOP 1 * from Admins WHERE Username=@Username";
+        private const string FindAdminQuery = "SELECT * from Admins WHERE Username=@Username";
 
         private const string CreateAdminQuery =
             "INSERT INTO Admins (Username, PasswordHash, PasswordSalt) VALUES (@Username, @PasswordHash, @PasswordSalt)";
@@ -51,11 +52,17 @@ namespace InfoScreen.Admin.Logic
 
         private static DAL.Entity.Admin ParseAdmin(DataRow row)
         {
+            var salt = new byte[Hash.SaltSize];
+            Array.Copy((byte[]) row["PasswordSalt"], salt, Hash.SaltSize);
+
+            var hash = new byte[Hash.HashSize];
+            Array.Copy((byte[]) row["PasswordHash"], hash, Hash.HashSize);
+
             return new DAL.Entity.Admin(
                 id: (int) row["Id"],
                 username: (string) row["Username"],
-                passwordSalt: (byte[]) row["PasswordSalt"],
-                passwordHash: (byte[]) row["PasswordHash"]
+                passwordSalt: salt,
+                passwordHash: hash
             );
         }
     }

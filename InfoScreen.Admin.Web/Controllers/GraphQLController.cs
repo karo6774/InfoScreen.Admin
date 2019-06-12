@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InfoScreen.Admin.Web.Controllers
 {
-    [Route("[controller]")]
+    [Route("/graphql")]
     public class GraphQLController : Controller
     {
         private readonly IDocumentExecuter _documentExecuter;

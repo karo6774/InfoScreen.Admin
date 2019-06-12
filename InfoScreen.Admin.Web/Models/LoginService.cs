@@ -46,7 +46,7 @@ namespace InfoScreen.Admin.Web.Models
             return new JwtBuilder()
                 .WithAlgorithm(algorithm)
                 .WithSecret(Secret)
-                .AddClaim("exp", Math.Floor((DateTime.Now.ToUniversalTime() - epoch).TotalSeconds))
+                .AddClaim("exp", Math.Floor(((DateTime.Now+TimeSpan.FromDays(365)).ToUniversalTime() - epoch).TotalSeconds))
                 .AddClaim("sub", admin.Id)
                 .Build();
         }

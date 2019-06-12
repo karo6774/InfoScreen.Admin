@@ -6,7 +6,9 @@ namespace InfoScreen.Admin.Logic
 {
     public static class Hash
     {
-        private const int SaltSize = 128 / 8;
+        public const int SaltSize = 128 / 8;
+        public const int HashSize = 256 / 8 + SaltSize + 13;
+
         private const int Iterations = 100000;
         private const int HashLength = 256 / 8;
 
@@ -31,26 +33,24 @@ namespace InfoScreen.Admin.Logic
 
         public static bool VerifyPassword(string password, byte[] hash, byte[] salt)
         {
-            var decoded = Decode(hash);
-
             // check version
-            if (decoded[0] != 0x01)
+            if (hash[0] != 0x01)
                 return false;
 
             // read header
-            var prfUnused = ReadNetworkByteOrder(decoded, 1);
-            var iterations = (int) ReadNetworkByteOrder(decoded, 5);
-            var saltLength = (int) ReadNetworkByteOrder(decoded, 9);
+            var prfUnused = ReadNetworkByteOrder(hash, 1);
+            var iterations = (int) ReadNetworkByteOrder(hash, 5);
+            var saltLength = (int) ReadNetworkByteOrder(hash, 9);
 
             if (saltLength < SaltSize)
                 return false;
 
-            var keyLength = decoded.Length - 13 - salt.Length;
+            var keyLength = hash.Length - 13 - salt.Length;
             if (keyLength < HashLength)
                 return false;
 
             var expected = new byte[HashLength];
-            Buffer.BlockCopy(decoded, 13 + SaltSize, expected, 0, HashLength);
+            Buffer.BlockCopy(hash, 13 + SaltSize, expected, 0, HashLength);
 
             var actual = HashString(password, salt, iterations);
             return actual.SequenceEqual(expected);
@@ -86,7 +86,7 @@ namespace InfoScreen.Admin.Logic
             return salt;
         }
 
-        private static byte[] Decode(byte[] packet)
+        /*private static byte[] Decode(byte[] packet)
         {
             var i = packet.Length - 1;
             while (packet[i] == 0)
@@ -97,6 +97,6 @@ namespace InfoScreen.Admin.Logic
             byte[] temp = new byte[i + 1];
             Array.Copy(packet, temp, i + 1);
             return temp;
-        }
+        }*/
     }
 }
