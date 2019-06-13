@@ -7,12 +7,26 @@ namespace InfoScreen.Admin.Web.Models
     public class InfoScreenQuery : ObjectGraphType<object>
     {
         public InfoScreenQuery(
+            ILunchplanRepository lunchplans,
             IMealRepository meals,
             IMessageRepository messages,
             IAdminRepository admins
         )
         {
             Name = "Query";
+
+            FieldAsync<LunchplanType>(
+                "lunchplan",
+                arguments: new QueryArguments(
+                    new QueryArgument<IntGraphType> {Name = "week"}
+                ),
+                resolve: async ctx =>
+                {
+                    if (ctx.HasArgument("week"))
+                        return await lunchplans.GetLunchplan(ctx.GetArgument<int>("week"));
+                    return null;
+                }
+            );
 
             FieldAsync<MealType>(
                 "meal",

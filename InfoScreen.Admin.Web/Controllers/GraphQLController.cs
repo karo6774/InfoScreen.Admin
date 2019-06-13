@@ -29,7 +29,7 @@ namespace InfoScreen.Admin.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query, [FromHeader] string authorization)
         {
-            if (authorization == null)
+            /*if (authorization == null)
             {
                 Response.StatusCode = 401;
                 Response.Headers["WWW-Authenticate"] = "Bearer";
@@ -50,7 +50,7 @@ namespace InfoScreen.Admin.Web.Controllers
             {
                 Response.StatusCode = 403;
                 return new EmptyResult();
-            }
+            }*/
 
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
@@ -62,7 +62,7 @@ namespace InfoScreen.Admin.Web.Controllers
                 Query = query.Query,
                 OperationName = query.OperationName,
                 Inputs = inputs,
-                UserContext = new InfoScreenUserContext(id)
+                //UserContext = new InfoScreenUserContext(id)
             };
 
             var result = await _documentExecuter.ExecuteAsync(executionOptions).ConfigureAwait(false);

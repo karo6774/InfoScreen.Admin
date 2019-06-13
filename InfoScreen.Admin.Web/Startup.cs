@@ -38,6 +38,7 @@ namespace InfoScreen.Admin.Web
             services.AddSingleton<LoginService>();
 
             services.AddTransient<IAdminRepository, DatabaseAdminRepository>();
+            services.AddTransient<ILunchplanRepository, DatabaseLunchplanRepository>();
             services.AddTransient<IMealRepository, DatabaseMealRepository>();
             services.AddTransient<IMessageRepository, DatabaseMessageRepository>();
 
@@ -48,8 +49,10 @@ namespace InfoScreen.Admin.Web
 
             services.AddSingleton<AdminType>();
             services.AddSingleton<AdminInputType>();
+            services.AddSingleton<LunchplanType>();
             services.AddSingleton<MealType>();
             services.AddSingleton<MealInputType>();
+            services.AddSingleton<MealplanType>();
             services.AddSingleton<MessageType>();
             services.AddSingleton<MessageInputType>();
 
