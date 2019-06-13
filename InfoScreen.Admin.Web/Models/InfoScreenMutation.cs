@@ -3,15 +3,31 @@ using System.Collections.Generic;
 using GraphQL;
 using GraphQL.Types;
 using InfoScreen.Admin.Logic;
+using InfoScreen.Admin.Logic.Entity;
 
 namespace InfoScreen.Admin.Web.Models
 {
     public class InfoScreenMutation : ObjectGraphType
     {
-        public InfoScreenMutation(IMessageRepository messages,
-            IAdminRepository admins)
+        public InfoScreenMutation(
+            IMealRepository meals,
+            IMessageRepository messages,
+            IAdminRepository admins
+        )
         {
             Name = "Mutation";
+
+            FieldAsync<BooleanGraphType>(
+                "createMeal",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<MealInputType>> {Name = "meal"}
+                ),
+                resolve: async ctx =>
+                {
+                    var meal = ctx.GetArgument<Meal>("meal");
+                    return await meals.CreateMeal(meal);
+                }
+            );
 
             FieldAsync<BooleanGraphType>(
                 "createMessage",

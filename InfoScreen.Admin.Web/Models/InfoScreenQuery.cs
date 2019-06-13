@@ -6,10 +6,31 @@ namespace InfoScreen.Admin.Web.Models
 {
     public class InfoScreenQuery : ObjectGraphType<object>
     {
-        public InfoScreenQuery(IMessageRepository messages,
-            IAdminRepository admins)
+        public InfoScreenQuery(
+            IMealRepository meals,
+            IMessageRepository messages,
+            IAdminRepository admins
+        )
         {
             Name = "Query";
+
+            FieldAsync<MealType>(
+                "meal",
+                arguments: new QueryArguments(
+                    new QueryArgument<IntGraphType> {Name = "id"}
+                ),
+                resolve: async ctx =>
+                {
+                    if (ctx.HasArgument("id"))
+                        return await meals.GetMeal(ctx.GetArgument<int>("id"));
+                    return null;
+                }
+            );
+
+            FieldAsync<ListGraphType<MealType>>(
+                "meals",
+                resolve: async ctx => await meals.ListMeals()
+            );
 
             FieldAsync<MessageType>(
                 "message",

@@ -32,14 +32,15 @@ namespace InfoScreen.Admin.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
             services.AddSingleton<LoginService>();
-            
+
             services.AddTransient<IAdminRepository, DatabaseAdminRepository>();
+            services.AddTransient<IMealRepository, DatabaseMealRepository>();
             services.AddTransient<IMessageRepository, DatabaseMessageRepository>();
-            
+
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
             services.AddSingleton<IDocumentWriter, DocumentWriter>();
             services.AddSingleton<InfoScreenQuery>();
@@ -47,6 +48,8 @@ namespace InfoScreen.Admin.Web
 
             services.AddSingleton<AdminType>();
             services.AddSingleton<AdminInputType>();
+            services.AddSingleton<MealType>();
+            services.AddSingleton<MealInputType>();
             services.AddSingleton<MessageType>();
             services.AddSingleton<MessageInputType>();
 
