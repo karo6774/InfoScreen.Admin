@@ -59,6 +59,10 @@ namespace InfoScreen.Admin.Web
             services.AddSingleton<MessageInputType>();
 
             services.AddSingleton<ISchema, InfoScreenSchema>();
+            services.AddCors(opts =>
+            {
+                opts.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +75,7 @@ namespace InfoScreen.Admin.Web
             }
 
             app.UseMvc();
+            app.UseCors();
         }
     }
 }

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using InfoScreen.Admin.Web.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoScreen.Admin.Web.Controllers
 {
+    [EnableCors]
     [Route("/token")]
     public class TokenController : Controller
     {
