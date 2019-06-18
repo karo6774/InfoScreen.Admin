@@ -77,7 +77,7 @@ namespace InfoScreen.Admin.Logic
             return ParseLunchplan(row);
         }
 
-        public async Task SaveLunchplan(Lunchplan plan)
+        public async Task<bool> SaveLunchplan(Lunchplan plan)
         {
             int lpId = plan.Id;
             bool exists = true;
@@ -156,6 +156,8 @@ namespace InfoScreen.Admin.Logic
                     }
                 }
             }
+
+            return true;
         }
     }
 }

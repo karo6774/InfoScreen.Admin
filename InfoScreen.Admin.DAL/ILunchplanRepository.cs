@@ -11,6 +11,6 @@ namespace InfoScreen.Admin.Logic
     {
         Task<Lunchplan> GetLunchplan(int week);
 
-        Task SaveLunchplan(Lunchplan plan);
+        Task<bool> SaveLunchplan(Lunchplan plan);
     }
 }
