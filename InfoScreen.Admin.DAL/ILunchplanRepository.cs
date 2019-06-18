@@ -10,5 +10,7 @@ namespace InfoScreen.Admin.Logic
     public interface ILunchplanRepository
     {
         Task<Lunchplan> GetLunchplan(int week);
+
+        Task SaveLunchplan(Lunchplan plan);
     }
 }

@@ -9,6 +9,10 @@ namespace InfoScreen.Admin.Logic.Internal
         public int LunchplanId { get; set; }
         public Weekday Weekday { get; set; }
 
+        public MealVsLunchplan()
+        {
+        }
+
         public MealVsLunchplan(int id, int mealId, int lunchplanId, Weekday weekday)
         {
             Id = id;
