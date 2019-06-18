@@ -16,6 +16,24 @@ namespace InfoScreen.Admin.Web.Models
         )
         {
             Name = "Mutation";
+            
+            FieldAsync<BooleanGraphType>(
+                "createAdmin",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<AdminInputType>> {Name = "admin"}
+                ),
+                resolve: async ctx =>
+                {
+                    var input = ctx.GetArgument<Dictionary<string, object>>("admin");
+                    var admin = new DAL.Entity.Admin
+                    {
+                        Username = (string) input["username"]
+                    };
+                    admin.SetPassword((string) input["password"]);
+
+                    return await admins.CreateAdmin(admin);
+                }
+            );
 
             FieldAsync<BooleanGraphType>(
                 "createMeal",
@@ -40,24 +58,6 @@ namespace InfoScreen.Admin.Web.Models
                     message.Date = DateTime.Now;
                     message.CreatedBy = ctx.UserContext.As<InfoScreenUserContext>().AdminId;
                     return await messages.CreateMessage(message);
-                }
-            );
-
-            FieldAsync<BooleanGraphType>(
-                "createAdmin",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<AdminInputType>> {Name = "admin"}
-                ),
-                resolve: async ctx =>
-                {
-                    var input = ctx.GetArgument<Dictionary<string, object>>("admin");
-                    var admin = new DAL.Entity.Admin
-                    {
-                        Username = (string) input["username"]
-                    };
-                    admin.SetPassword((string) input["password"]);
-
-                    return await admins.CreateAdmin(admin);
                 }
             );
         }
