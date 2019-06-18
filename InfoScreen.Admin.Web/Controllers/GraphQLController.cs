@@ -1,12 +1,11 @@
 using System;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Types;
 using InfoScreen.Admin.Web.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace InfoScreen.Admin.Web.Controllers
 {
@@ -16,41 +15,48 @@ namespace InfoScreen.Admin.Web.Controllers
         private readonly IDocumentExecuter _documentExecuter;
         private readonly ISchema _schema;
         private readonly LoginService _login;
+        private bool _enableAuth;
 
         private readonly Regex _headerRegex = new Regex("^Bearer\\s+(.+)$");
 
-        public GraphQLController(ISchema schema, IDocumentExecuter documentExecuter, LoginService login)
+        public GraphQLController(ISchema schema, IDocumentExecuter documentExecuter, LoginService login,
+            IConfiguration configuration)
         {
             _schema = schema;
             _documentExecuter = documentExecuter;
             _login = login;
+            if (!bool.TryParse(configuration["EnableAuth"], out _enableAuth))
+                _enableAuth = true;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query, [FromHeader] string authorization)
         {
-            /*if (authorization == null)
+            if (_enableAuth)
             {
-                Response.StatusCode = 401;
-                Response.Headers["WWW-Authenticate"] = "Bearer";
-                return new EmptyResult();
-            }
+                if (authorization == null)
+                {
+                    Response.StatusCode = 401;
+                    Response.Headers["WWW-Authenticate"] = "Bearer";
+                    return new EmptyResult();
+                }
 
-            var match = _headerRegex.Match(authorization);
-            if (!match.Success)
-            {
-                Response.StatusCode = 401;
-                Response.Headers["WWW-Authenticate"] = "Bearer";
-                return new EmptyResult();
-            }
+                var match = _headerRegex.Match(authorization);
+                if (!match.Success)
+                {
+                    Response.StatusCode = 401;
+                    Response.Headers["WWW-Authenticate"] = "Bearer";
+                    return new EmptyResult();
+                }
 
-            var token = match.Groups[1].Value;
-            var (success, id) = _login.VerifyToken(token);
-            if (!success)
-            {
-                Response.StatusCode = 403;
-                return new EmptyResult();
-            }*/
+                var token = match.Groups[1].Value;
+                var (success, id) = _login.VerifyToken(token);
+                if (!success)
+                {
+                    Response.StatusCode = 403;
+                    return new EmptyResult();
+                }
+            }
 
             if (query == null)
                 throw new ArgumentNullException(nameof(query));
