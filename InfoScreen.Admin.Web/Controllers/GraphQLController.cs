@@ -16,7 +16,7 @@ namespace InfoScreen.Admin.Web.Controllers
         private readonly IDocumentExecuter _documentExecuter;
         private readonly ISchema _schema;
         private readonly LoginService _login;
-        
+
         private readonly Regex _headerRegex = new Regex("^Bearer\\s+(.+)$");
 
         public GraphQLController(ISchema schema, IDocumentExecuter documentExecuter, LoginService login)
@@ -61,11 +61,14 @@ namespace InfoScreen.Admin.Web.Controllers
                 Schema = _schema,
                 Query = query.Query,
                 OperationName = query.OperationName,
-                Inputs = inputs,
-                //UserContext = new InfoScreenUserContext(id)
+                Inputs = inputs
             };
 
             var result = await _documentExecuter.ExecuteAsync(executionOptions).ConfigureAwait(false);
+
+            if (result.Errors != null)
+                foreach (var error in result.Errors)
+                    Console.Error.Write(error);
 
             if (result.Errors?.Count > 0)
                 return BadRequest(result);
