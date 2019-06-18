@@ -10,13 +10,14 @@ namespace InfoScreen.Admin.Web.Models
     public class InfoScreenMutation : ObjectGraphType
     {
         public InfoScreenMutation(
+            IAdminRepository admins,
+            ILunchplanRepository lunchplans,
             IMealRepository meals,
-            IMessageRepository messages,
-            IAdminRepository admins
+            IMessageRepository messages
         )
         {
             Name = "Mutation";
-            
+
             FieldAsync<BooleanGraphType>(
                 "createAdmin",
                 arguments: new QueryArguments(
@@ -32,6 +33,30 @@ namespace InfoScreen.Admin.Web.Models
                     admin.SetPassword((string) input["password"]);
 
                     return await admins.CreateAdmin(admin);
+                }
+            );
+
+            FieldAsync<BooleanGraphType>(
+                "saveLunchplan",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<LunchplanInputType>> {Name = "lunchplan"}
+                ),
+                resolve: async ctx =>
+                {
+                    var arg = ctx.GetArgument<Dictionary<string, object>>("lunchplan");
+                    var week = (int) arg["week"];
+                    var mp = (Dictionary<string, object>) arg["mealplan"];
+                    var mealplan = new Dictionary<Weekday, int>();
+                    foreach (var (key, val) in mp)
+                        mealplan[Enum.Parse<Weekday>(key, true)] = (int) val;
+
+                    var lunchplan = new Lunchplan
+                    {
+                        WeekNumber = week,
+                        Mealplan = mealplan
+                    };
+
+                    return await lunchplans.SaveLunchplan(lunchplan);
                 }
             );
 

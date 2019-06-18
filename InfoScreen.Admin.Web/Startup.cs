@@ -50,9 +50,11 @@ namespace InfoScreen.Admin.Web
             services.AddSingleton<AdminType>();
             services.AddSingleton<AdminInputType>();
             services.AddSingleton<LunchplanType>();
+            services.AddSingleton<LunchplanInputType>();
             services.AddSingleton<MealType>();
             services.AddSingleton<MealInputType>();
             services.AddSingleton<MealplanType>();
+            services.AddSingleton<MealplanInputType>();
             services.AddSingleton<MessageType>();
             services.AddSingleton<MessageInputType>();
 
