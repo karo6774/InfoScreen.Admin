@@ -51,6 +51,8 @@ namespace InfoScreen.Admin.Logic
         public async Task<Lunchplan> GetLunchplan(int week)
         {
             var plan = await GetRawLunchplan(week);
+            if (plan == null)
+                return null;
 
             var data = await Database.Query(GetMealVsLunchplansQuery, parameters: new Dictionary<string, object>
             {
