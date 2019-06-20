@@ -23,6 +23,9 @@ namespace InfoScreen.Admin.Logic
         private const string CreateMealVsLunchplanQuery =
             "INSERT into MealsVsLunchPlans (LunchPlanId, MealId, Weekday) VALUES (@LunchplanId, @MealId, @Weekday)";
 
+        private const string IncrementTimesChosenQuery =
+            "UPDATE Meals SET TimesChosen=TimesChosen+1 WHERE Id=@Id";
+
         private static Lunchplan ParseLunchplan(DataRow row)
         {
             return new Lunchplan(
@@ -77,6 +80,10 @@ namespace InfoScreen.Admin.Logic
             return ParseLunchplan(row);
         }
 
+        /**
+         * Updates a Lunchplan for the given week. The plan parameter is expected to be partial, only containing the
+         * days that should be updated. All meals in the plan will have their timesChosen field incremented.
+         */
         public async Task<bool> SaveLunchplan(Lunchplan plan)
         {
             int lpId = plan.Id;
@@ -155,6 +162,17 @@ namespace InfoScreen.Admin.Logic
                         }
                     }
                 }
+            }
+
+            foreach (var (_, meal) in plan.Mealplan)
+            {
+                // meal was removed, don't increment
+                if (meal == 0)
+                    continue;
+                await Database.Query(IncrementTimesChosenQuery, parameters: new Dictionary<string, object>
+                {
+                    {"@Id", meal}
+                });
             }
 
             return true;
