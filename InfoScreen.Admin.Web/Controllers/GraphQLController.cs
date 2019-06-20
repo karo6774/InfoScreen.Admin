@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Types;
 using InfoScreen.Admin.Web.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace InfoScreen.Admin.Web.Controllers
 {
+    [EnableCors]
     [Route("/graphql")]
     public class GraphQLController : Controller
     {
