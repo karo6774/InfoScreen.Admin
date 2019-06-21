@@ -34,6 +34,7 @@ namespace InfoScreen.Admin.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GraphQLQuery query, [FromHeader] string authorization)
         {
+            var id = 0;
             if (_enableAuth)
             {
                 if (authorization == null)
@@ -52,7 +53,8 @@ namespace InfoScreen.Admin.Web.Controllers
                 }
 
                 var token = match.Groups[1].Value;
-                var (success, id) = _login.VerifyToken(token);
+                var (success, userId) = _login.VerifyToken(token);
+                id = userId;
                 if (!success)
                 {
                     Response.StatusCode = 403;
@@ -69,6 +71,7 @@ namespace InfoScreen.Admin.Web.Controllers
                 Schema = _schema,
                 Query = query.Query,
                 OperationName = query.OperationName,
+                UserContext = new InfoScreenUserContext(id),
                 Inputs = inputs
             };
 
