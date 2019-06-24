@@ -37,6 +37,24 @@ namespace InfoScreen.Admin.Web.Models
             );
 
             FieldAsync<BooleanGraphType>(
+                "updateAdmin",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<AdminInputType>> {Name = "admin"}
+                ),
+                resolve: async ctx =>
+                {
+                    var input = ctx.GetArgument<Dictionary<string, object>>("admin");
+                    var admin = new DAL.Entity.Admin
+                    {
+                        Username = (string) input["username"]
+                    };
+                    admin.SetPassword((string) input["password"]);
+
+                    return await admins.UpdateAdmin(admin);
+                }
+            );
+
+            FieldAsync<BooleanGraphType>(
                 "saveLunchplan",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<LunchplanInputType>> {Name = "lunchplan"}

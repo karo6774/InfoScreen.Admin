@@ -12,6 +12,9 @@ namespace InfoScreen.Admin.Logic
 
         private const string CreateAdminQuery =
             "INSERT INTO Admins (Username, PasswordHash, PasswordSalt) VALUES (@Username, @PasswordHash, @PasswordSalt)";
+        
+        private const string UpdateAdminQuery =
+            "UPDATE Admins SET PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt WHERE Username=@Username";
 
         public async Task<DAL.Entity.Admin> GetAdmin(int id)
         {
@@ -42,6 +45,17 @@ namespace InfoScreen.Admin.Logic
         public async Task<bool> CreateAdmin(DAL.Entity.Admin admin)
         {
             await Database.Query(CreateAdminQuery, parameters: new Dictionary<string, object>
+            {
+                {"@Username", admin.Username},
+                {"@PasswordSalt", admin.PasswordSalt},
+                {"@PasswordHash", admin.PasswordHash}
+            });
+            return true;
+        }
+
+        public async Task<bool> UpdateAdmin(DAL.Entity.Admin admin)
+        {
+            await Database.Query(UpdateAdminQuery, parameters: new Dictionary<string, object>
             {
                 {"@Username", admin.Username},
                 {"@PasswordSalt", admin.PasswordSalt},

@@ -9,5 +9,7 @@ namespace InfoScreen.Admin.Logic
         Task<DAL.Entity.Admin> FindByUsername(string username);
 
         Task<bool> CreateAdmin(DAL.Entity.Admin admin);
+
+        Task<bool> UpdateAdmin(DAL.Entity.Admin admin);
     }
 }
