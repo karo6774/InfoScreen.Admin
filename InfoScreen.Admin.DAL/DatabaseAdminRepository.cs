@@ -16,6 +16,9 @@ namespace InfoScreen.Admin.Logic
         private const string UpdateAdminQuery =
             "UPDATE Admins SET PasswordHash=@PasswordHash, PasswordSalt=@PasswordSalt WHERE Username=@Username";
 
+        private const string DeleteAdminQuery =
+            "DELETE Admins WHERE Username=@Username";
+
         public async Task<DAL.Entity.Admin> GetAdmin(int id)
         {
             var data = await Database.Query(GetAdminQuery, parameters: new Dictionary<string, object>
@@ -60,6 +63,15 @@ namespace InfoScreen.Admin.Logic
                 {"@Username", admin.Username},
                 {"@PasswordSalt", admin.PasswordSalt},
                 {"@PasswordHash", admin.PasswordHash}
+            });
+            return true;
+        }
+
+        public async Task<bool> DeleteAdmin(string username)
+        {
+            await Database.Query(DeleteAdminQuery, parameters: new Dictionary<string, object>
+            {
+                {"@Username", username}
             });
             return true;
         }

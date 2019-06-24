@@ -55,6 +55,18 @@ namespace InfoScreen.Admin.Web.Models
             );
 
             FieldAsync<BooleanGraphType>(
+                "deleteAdmin",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> {Name = "admin"}
+                ),
+                resolve: async ctx =>
+                {
+                    if (ctx.HasArgument("admin"))
+                        return await admins.DeleteAdmin(ctx.GetArgument<string>("admin"));
+                    return false;
+                });
+
+            FieldAsync<BooleanGraphType>(
                 "saveLunchplan",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<LunchplanInputType>> {Name = "lunchplan"}

@@ -11,5 +11,7 @@ namespace InfoScreen.Admin.Logic
         Task<bool> CreateAdmin(DAL.Entity.Admin admin);
 
         Task<bool> UpdateAdmin(DAL.Entity.Admin admin);
+
+        Task<bool> DeleteAdmin(string username);
     }
 }
