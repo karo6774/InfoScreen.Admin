@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace InfoScreen.Admin.Logic
@@ -69,10 +70,19 @@ namespace InfoScreen.Admin.Logic
 
         public async Task<bool> DeleteAdmin(string username)
         {
-            await Database.Query(DeleteAdminQuery, parameters: new Dictionary<string, object>
+            try
             {
-                {"@Username", username}
-            });
+                await Database.Query(DeleteAdminQuery, parameters: new Dictionary<string, object>
+                {
+                    {"@Username", username}
+                });
+            }
+            catch (SqlException e)
+            {
+                Console.Error.WriteLine(e);
+                return false;
+            }
+
             return true;
         }
 
