@@ -30,7 +30,7 @@ namespace InfoScreen.Admin.Logic
         {
             return new Lunchplan(
                 id: (int) row["Id"],
-                weekNumber: (int) row["Week"]
+                weekNumber: 1 + (int) row["Week"]
             );
         }
 
@@ -53,7 +53,7 @@ namespace InfoScreen.Admin.Logic
 
         public async Task<Lunchplan> GetLunchplan(int week)
         {
-            var plan = await GetRawLunchplan(week);
+            var plan = await GetRawLunchplan(week - 1);
             if (plan == null)
                 return null;
 

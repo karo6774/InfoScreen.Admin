@@ -22,7 +22,13 @@
       "launchUrl": "graphql",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_SERVER": "10.205.112.33",
+        "DB_USERNAME": "sa",
+        "DB_PASSWORD": "QwerZxcv1234",
+        "DB_DATABASE": "DAHO.AspITInfoScreen",
+        "JWT_SECRET": "secret",
+        "JWT_ALGORITHM": "HMACSHA256"
       }
     }
   }
